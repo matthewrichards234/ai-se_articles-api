@@ -4,6 +4,7 @@ import { PDFParse } from 'pdf-parse';
 import Document from '../models/document.js';
 import Chunk from '../models/chunk.js';
 import { chunkText } from '../utils/chunk.js';
+import { createEmbedding } from '../utils/embeddings.js';
 
 export const uploadDocument = async (req: Request, res: Response) => {
   if (!req.file) {
@@ -27,11 +28,11 @@ export const uploadDocument = async (req: Request, res: Response) => {
   });
 
   await Promise.all(
-    chunks.map((chunk) =>
+    chunks.map(async (chunk) =>
       Chunk.create({
         documentId: document._id,
         text: chunk,
-        embedding: [],
+        embedding: await createEmbedding(chunk),
       }),
     ),
   );
