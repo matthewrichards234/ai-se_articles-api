@@ -1,14 +1,21 @@
 import dotenv from 'dotenv';
-dotenv.config();
-
 import express from 'express';
 import mongoose from 'mongoose';
 import router from './routes/index.js';
 import { errorHandler } from './middleware/error.js';
 
+dotenv.config();
+
+if (!process.env.NEBIUS_API_KEY) {
+  console.error('Error: NEBIUS_API_KEY is not set in .env');
+  process.exit(1);
+}
+
 const app = express();
-const port = 3000;
-const mongoUri = 'mongodb://127.0.0.1:27017/articles';
+const port = process.env.PORT;
+const mongoUri = process.env.MONGO_URI;
+
+console.log('MongoUri: ', mongoUri);
 
 app.use(express.json());
 
